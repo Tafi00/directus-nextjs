@@ -15,16 +15,15 @@ COPY package.json package-lock.json ./
 # Set build-time environment variables
 ENV NODE_ENV=production
 
-
-# Install dependencies using npm ci (ensures a clean, reproducible install)
-RUN npm ci --omit=dev && npm cache clean --force
-
 # ============================================
 # Stage 2: Build the Next.js Application
 # ============================================
 
 # Use the base image to build the application
 FROM base AS builder
+
+# Install ALL dependencies including dev dependencies for build
+RUN npm ci && npm cache clean --force
 
 # Copy the entire application source code into the container
 COPY . .
@@ -42,7 +41,6 @@ FROM node:${NODE_VERSION} AS runner
 # Use a built-in non-root user for security best practices
 USER node
 
-
 # Disable Next.js telemetry during runtime
 ENV NEXT_TELEMETRY_DISABLE=1
 
@@ -53,7 +51,6 @@ WORKDIR /app
 COPY --from=builder /app/.next/standalone ./      
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public              
-
 
 EXPOSE 3033
 
