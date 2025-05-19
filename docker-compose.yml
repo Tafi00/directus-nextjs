@@ -1,0 +1,28 @@
+services:
+  infinity:
+    image: ghcr.io/tafi00/directus-nextjs:latest
+    container_name: DirectusNextJS
+    restart: always
+    ports:
+      - "3033:3033"
+    environment:
+      - NODE_ENV=production
+      - PORT=3033
+      - NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055
+      - DIRECTUS_PUBLIC_TOKEN=your-public-token 
+      - DIRECTUS_FORM_TOKEN=your-form-token
+      - DRAFT_MODE_SECRET=your-draft-mode-secret
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_ENABLE_VISUAL_EDITING=true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config.json:/config.json
+    environment:
+      - DOCKER_CONFIG=/
+    command: --interval 20 --cleanup --remove-volumes
+    restart: always

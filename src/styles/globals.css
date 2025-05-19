@@ -1,0 +1,84 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--background-color: #ffffff; /* Light background */
+	--foreground-color: #42566e; /* Light text */
+	--background-color-muted: color-mix(in srgb, var(--background-color), var(--foreground-color) 10%);
+	--accent-color: #6644ff; /* Accent color */
+	--background-variant-color: #172940;
+	--accent-color-dark: color-mix(in srgb, var(--accent-color), black 40%);
+	--accent-color-soft: color-mix(in srgb, var(--accent-color), white 20%);
+	--accent-color-light: color-mix(in srgb, var(--accent-color), white 90%);
+	--input-color: color-mix(in srgb, var(--background-color), var(--foreground-color) 30%);
+}
+
+.dark {
+	--background-color: #0e1a2b ; /* Default dark background */
+	--background-color-muted: color-mix(in srgb, var(--background-color), var(--foreground-color) 10%);
+	--background-variant-color: #172940;
+	--foreground-color: #ffffff; /* Default dark text */
+}
+
+@layer base {
+	html {
+		@apply bg-[var(--background-color)] text-[var(--foreground-color)];
+	}
+
+}
+
+@layer components {
+	.container-width {
+		@apply w-[88.5vw] mx-auto;
+	  }
+	  .nav-link {
+		@apply text-[#0C5B3E] hover:opacity-80 text-sm md:text-base xl:text-xl 2xl:text-[20px] font-[550] transition-all;
+	  }
+
+}
+
+@layer utilities {
+	a,div,p,span,h1,h2,h3,h4,h5,h6 {
+		@apply  whitespace-pre-wrap;
+	}
+	a {
+		@apply hover:text-accent transition-colors no-underline;
+	}
+	.form-container {
+		@apply rounded-lg p-4 sm:p-6 lg:p-8 w-full lg:w-[440px] xl:w-[480px] 2xl:w-[530px];
+		background: #0c5b3e;
+		animation: slideIn 0.5s ease-out;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s ease;
+	  }
+	
+	  .form-container:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+	  }
+	  
+  .form-title {
+    @apply text-xl sm:text-2xl 2xl:text-[28px] font-bold text-center mb-2 sm:mb-4;
+  }
+
+  .form-subtitle {
+    @apply text-sm sm:text-base 2xl:text-[16px] text-center mb-4 sm:mb-5 font-medium;
+  }
+
+  .form-button {
+    @apply w-full h-[50px] sm:h-[56px] lg:h-[64px] bg-[#FEFBF2] text-[#0C5B3E] text-sm sm:text-base font-semibold rounded-[10px] flex items-center justify-center border border-white/50 transition-all duration-300;
+    transform: translateY(0);
+  }
+
+  .form-button:hover {
+    @apply bg-[#FEFBF2];
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(28, 117, 151, 0.3);
+  }
+
+  .form-buttons-container {
+    @apply space-y-3 sm:space-y-4;
+  }
+}
