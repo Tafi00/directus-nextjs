@@ -15,6 +15,10 @@ COPY package.json package-lock.json ./
 # Set build-time environment variables
 ENV NODE_ENV=production
 
+
+# Install dependencies using npm ci (ensures a clean, reproducible install)
+RUN npm ci --omit=dev && npm cache clean --force
+
 # ============================================
 # Stage 2: Build the Next.js Application
 # ============================================
@@ -22,28 +26,11 @@ ENV NODE_ENV=production
 # Use the base image to build the application
 FROM base AS builder
 
-# Tạm thời đặt NODE_ENV=development để cài đặt đầy đủ dependencies
-ENV NODE_ENV=development
-
-# Cài đặt tất cả dependencies bao gồm cả devDependencies
-RUN npm ci && npm cache clean --force
-
-# Đặt lại NODE_ENV=production cho quá trình build
-ENV NODE_ENV=production
-
-# Thêm các biến môi trường giả để tránh lỗi build
-ENV NEXT_PUBLIC_DIRECTUS_URL=http://localhost:8055
-ENV DIRECTUS_PUBLIC_TOKEN=dummy_token
-ENV DIRECTUS_FORM_TOKEN=dummy_token
-ENV DRAFT_MODE_SECRET=dummy_secret
-ENV NEXT_PUBLIC_SITE_URL=http://localhost:3033
-
 # Copy the entire application source code into the container
 COPY . .
 
 # Build the application in standalone mode (outputs to `.next/standalone`)
-# Thêm cờ --ignore-build-errors để bỏ qua lỗi liên quan đến API và serverside
-RUN npm run build || npm run build -- --ignore-build-errors
+RUN npm run build
 
 # ============================================
 # Stage 3: Create Production Image
@@ -55,6 +42,7 @@ FROM node:${NODE_VERSION} AS runner
 # Use a built-in non-root user for security best practices
 USER node
 
+
 # Disable Next.js telemetry during runtime
 ENV NEXT_TELEMETRY_DISABLE=1
 
@@ -65,6 +53,7 @@ WORKDIR /app
 COPY --from=builder /app/.next/standalone ./      
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public              
+
 
 EXPOSE 3033
 
