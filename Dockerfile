@@ -22,14 +22,14 @@ ENV NODE_ENV=production
 # Use the base image to build the application
 FROM base AS builder
 
+# Tạm thời đặt NODE_ENV=development để cài đặt đầy đủ dependencies
+ENV NODE_ENV=development
 
+# Cài đặt tất cả dependencies bao gồm cả devDependencies
+RUN npm ci && npm cache clean --force
 
-# Install dependencies using npm ci (ensures a clean, reproducible install)
-RUN npm ci --omit=dev && npm cache clean --force
-
-
-# Explicitly make sure required dependency is installed
-RUN npm install --save-dev @next/bundle-analyzer@15.2.4
+# Đặt lại NODE_ENV=production cho quá trình build
+ENV NODE_ENV=production
 
 # Copy the entire application source code into the container
 COPY . .
