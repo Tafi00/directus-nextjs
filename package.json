@@ -1,6 +1,6 @@
 {
 	"name": "simple-cms-nextjs",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"website": "starters-simple-cms-nextjs.vercel.app",
 	"license": "MIT",
 	"scripts": {
