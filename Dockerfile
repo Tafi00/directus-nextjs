@@ -22,8 +22,14 @@ ENV NODE_ENV=production
 # Use the base image to build the application
 FROM base AS builder
 
-# Install ALL dependencies including dev dependencies for build
-RUN npm ci && npm cache clean --force
+
+
+# Install dependencies using npm ci (ensures a clean, reproducible install)
+RUN npm ci --omit=dev && npm cache clean --force
+
+
+# Explicitly make sure required dependency is installed
+RUN npm install --save-dev @next/bundle-analyzer@15.2.4
 
 # Copy the entire application source code into the container
 COPY . .
