@@ -19,6 +19,7 @@ const ContentSecurityPolicy = `
 `;
 
 const nextConfig: NextConfig = {
+	output: 'export',
 	webpack: (config:any) => {
 		config.cache = false;
 
