@@ -37,9 +37,10 @@ const config: Config = {
 					variant: 'var(--background-variant-color)',
 				},
 				foreground: 'var(--foreground-color)',
-				primary: 'var(--accent-color-light)',
+				primary: 'var(--primary-color)',
+				content: 'var(--content-color)',
 				input: 'var(--input-color)',
-				secondary: 'var(--accent-color-dark)',
+				secondary: 'var(--secondary-color)',
 				accent: 'var(--accent-color)',
 				soft: 'var(--accent-color-soft)',
 				blue: {

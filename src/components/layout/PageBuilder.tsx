@@ -11,11 +11,10 @@ const PageBuilder = ({ sections }: PageBuilderProps) => {
 		(block): block is PageBlock & { collection: string; item: object } =>
 			typeof block.collection === 'string' && !!block.item && typeof block.item === 'object',
 	);
-
 	return (
 		<div>
-			{validBlocks.map((block) => (
-				<div key={block.id} data-background={block.background} className="pb-8">
+			{validBlocks.map((block: any) => (
+				<section id={block.section_id} key={block.id} data-background={block.background} className="pb-8">
 					<Container>
 						<BaseBlock
 							block={{
@@ -25,7 +24,7 @@ const PageBuilder = ({ sections }: PageBuilderProps) => {
 							}}
 						/>
 					</Container>
-				</div>
+				</section>
 			))}
 		</div>
 	);

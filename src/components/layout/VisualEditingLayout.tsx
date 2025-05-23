@@ -11,18 +11,6 @@ interface VisualEditingLayoutProps {
 	children: ReactNode;
 }
 
-export default function VisualEditingLayout({
-	headerNavigation,
-	footerNavigation,
-	globals,
-	children,
-}: VisualEditingLayoutProps) {
-	const { isVisualEditingEnabled, apply } = useVisualEditing();
-	const router = useRouter();
-
-	return (
-		<>
-			{children}
-		</>
-	);
+export default function VisualEditingLayout({ children }: VisualEditingLayoutProps) {
+	return <>{children}</>;
 }

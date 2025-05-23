@@ -4,7 +4,6 @@ import RichText from '@/components/blocks/RichText';
 import Hero from '@/components/blocks/Hero';
 import Gallery from '@/components/blocks/Gallery';
 import Pricing from '@/components/blocks/Pricing';
-import Posts from '@/components/blocks/Posts';
 import Form from '@/components/blocks/Form';
 import InfoBox from '@/components/blocks/InfoBox';
 import InfoGroup from '@/components/blocks/InfoGroup';
@@ -24,7 +23,6 @@ const BaseBlock = ({ block }: BaseBlockProps) => {
 		block_richtext: RichText,
 		block_gallery: Gallery,
 		block_pricing: Pricing,
-		block_posts: Posts,
 		block_form: Form,
 		block_infobox: InfoBox,
 		block_info_group: InfoGroup,

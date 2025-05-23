@@ -10,18 +10,23 @@ import { setAttr } from '@directus/visual-editing';
 interface FooterProps {
 	footer?: {
 		id: string;
-		headquarters_address?: string | null;
-		headquarters_address_detail?: string | null;
-		office_address?: string | null;
-		office_address_detail?: string | null;
-		hotline?: string | null;
-		email?: string | null;
-		desktop_background?: string | null;
-		footer_logo?: string | null;
-		mobile_background?: string | null;
 		copyright_text?: string | null;
 		terms_url?: string | null;
 		privacy_url?: string | null;
+		desktop_background?: any | null;
+		footer_logo?: any | null;
+		mobile_background?: any | null;
+		info?: {
+			id: number;
+			title: string;
+			subtitle?: string | null;
+			type: string;
+			email?: string | null;
+			phone?: string | null;
+			url?: string | null;
+			info_id: number;
+			icon?: string | null;
+		}[] | null;
 	};
 }
 
@@ -91,36 +96,43 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 		}
 	};
 
-	const infoData = [
-		<span key={0} className="leading-[1.4] text-[1vw]">
-			Trụ sở chính: {footer?.headquarters_address}
-			<br />
-			<span className="text-[0.7vw] font-light">
-				{footer?.headquarters_address_detail}
-			</span>
-		</span>,
-		<span key={1} className="leading-[1.4] text-[1vw]">
-			Văn phòng bán hàng và nhà mẫu
-			<br />
-			<span className="text-[0.7vw] font-light">
-				{footer?.office_address_detail}
-			</span>
-		</span>,
-		<span
-			onClick={() => footer?.hotline && window.open(`tel:${footer.hotline}`)}
-			key={2}
-			className="leading-[1.4] text-[1vw] cursor-pointer"
-		>
-			Hotline: {footer?.hotline}
-		</span>,
-		<span
-			onClick={() => footer?.email && window.open(`mailto:${footer.email}`)}
-			key={3}
-			className="leading-[1.4] text-[1vw] cursor-pointer"
-		>
-			Email: {footer?.email}
-		</span>,
-	];
+	const infoData = footer?.info?.map((item, index) => {
+		if (item.type === 'email') {
+			return (
+				<span
+					onClick={() => item.email && window.open(`mailto:${item.email}`)}
+					key={index}
+					className="leading-[1.4] text-[1vw] cursor-pointer"
+				>
+					{item.title}
+				</span>
+			);
+		} else if (item.type === 'phone') {
+			return (
+				<span
+					onClick={() => item.phone && window.open(`tel:${item.phone}`)}
+					key={index}
+					className="leading-[1.4] text-[1vw] cursor-pointer"
+				>
+					{item.title}
+				</span>
+			);
+		} else {
+			return (
+				<span key={index} className="leading-[1.4] text-[1vw]">
+					{item.title}
+					{item.subtitle && (
+						<>
+							<br />
+							<span className="text-[0.7vw] font-light">
+								{item.subtitle}
+							</span>
+						</>
+					)}
+				</span>
+			);
+		}
+	}) || [];
 
 	// Desktop Version
 	const renderDesktopVersion = () => (
@@ -129,7 +141,7 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 				className="absolute inset-0 bg-cover bg-bottom"
 				style={{ 
 					backgroundImage: footer?.desktop_background 
-						? `url(${directusURL}/assets/${footer.desktop_background})` 
+						? `url(${directusURL}/assets/${footer.desktop_background.id})` 
 						: "url('/images/section12_bg.jpg')" 
 				}}
 				data-directus={footer ? setAttr({
@@ -145,7 +157,7 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 			>
 				{footer?.footer_logo && (
 					<img
-						src={`${directusURL}/assets/${footer.footer_logo}`}
+						src={`${directusURL}/assets/${footer.footer_logo.id}`}
 						alt="logo"
 						className="w-[26%] h-auto"
 						data-directus={footer ? setAttr({
@@ -157,26 +169,28 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 					/>
 				)}
 				<div className="flex items-center gap-[2vw] mt-[2%]">
-					<div className="flex flex-col items-start gap-[1.4vw]">
-						{infoData.map((e, i) => (
+					<div
+					data-directus={footer ? setAttr({
+						collection: 'global_footer',
+						item: footer.id,
+						fields: 'info',
+						mode: 'modal',
+					}) : undefined}
+					className="flex flex-col items-start gap-[1.4vw]">
+						{infoData.map((infoItem, i) => (
 							<div
 								key={i}
 								className="text-white flex items-start gap-[1.2vw] text-[1.6vw] leading-[1.4]"
-								data-directus={footer ? setAttr({
-									collection: 'global_footer',
-									item: footer.id,
-									fields: i === 0 ? ['headquarters_address', 'headquarters_address_detail'] :
-											i === 1 ? 'office_address_detail' :
-											i === 2 ? 'hotline' : 'email',
-									mode: 'modal',
-								}) : undefined}
+								
 							>
 								<img
 									alt="icon"
-									src={`/images/sec-12-icon-${i + 1}.png`}
+									src={footer?.info && footer.info[i]?.icon 
+										? `${directusURL}/assets/${footer.info[i].icon}` 
+										: `/images/sec-12-icon-${i + 1}.png`}
 									className="w-[1.8vw] h-[1.8vw]"
 								/>
-								{e}
+								{infoItem}
 							</div>
 						))}
 					</div>
@@ -291,7 +305,7 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 			<div className="relative">
 				<img 
 					src={footer?.mobile_background 
-						? `${directusURL}/assets/${footer.mobile_background}` 
+						? `${directusURL}/assets/${footer.mobile_background.id}` 
 						: "/images/bg-section12-0.jpg"} 
 					alt="bg" 
 					className="w-full"
@@ -305,7 +319,7 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 				<div className="absolute top-0 flex flex-col justify-center">
 					{footer?.footer_logo && (
 						<img
-							src={`${directusURL}/assets/${footer.footer_logo}`}
+							src={`${directusURL}/assets/${footer.footer_logo.id}`}
 							alt="logo"
 							className="w-screen mt-[5%]"
 							data-directus={footer ? setAttr({
@@ -376,36 +390,35 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 					<div className="flex flex-col items-start gap-[1.4vw] mx-auto">
 						<div 
 							className="text-white/90 text-[3.6vw] leading-[1.4] text-center mt-[4%] no-underline"
-							data-directus={footer ? setAttr({
-								collection: 'global_footer',
+							data-directus={footer?.info?.[0] ? setAttr({
+								collection: 'global_footer_info',
 								item: footer.id,
-								fields: ['headquarters_address', 'headquarters_address_detail', 'office_address_detail', 'hotline', 'email'],
+								fields: 'info',
 								mode: 'modal',
 							}) : undefined}
 						>
-							<span className="font-bold text-white">TRỤ SỞ CHÍNH</span>
-							<br />
-							{footer?.headquarters_address}
-							<br />
-							{footer?.headquarters_address_detail}
-							<br />
-							<br />
-							<span className="font-bold text-white">
-								VĂN PHÒNG BÁN HÀNG VÀ NHÀ MẪU
-							</span>
-							<br />
-							{footer?.office_address_detail}
-							<br />
-							<br />
-							<span className="font-bold text-white uppercase">
-								Hotline:
-							</span>{" "}
-							{footer?.hotline}
-							<br />
-							<span className="font-bold text-white uppercase">
-								Email:
-							</span>{" "}
-							{footer?.email}
+							{footer?.info && footer.info.map((item, index) => {
+								if (item.type === 'email' || item.type === 'phone') {
+									const parts = item.title.split(':');
+									const label = parts[0] || '';
+									const value = parts.length > 1 ? parts[1].trim() : '';
+									
+									return (
+										<div key={index} className="mb-[3vw]">
+											<span className="font-bold text-white uppercase">{label}:</span>{" "}
+											{value}
+										</div>
+									);
+								} else {
+									return (
+										<div key={index} className="mb-[3vw]">
+											<span className="font-bold text-white">{item.title}</span>
+											<br />
+											{item.subtitle}
+										</div>
+									);
+								}
+							})}
 						</div>
 					</div>
 

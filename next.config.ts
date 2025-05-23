@@ -19,7 +19,7 @@ const ContentSecurityPolicy = `
 `;
 
 const nextConfig: NextConfig = {
-	output: 'export',
+	output: 'standalone',
 	webpack: (config:any) => {
 		config.cache = false;
 

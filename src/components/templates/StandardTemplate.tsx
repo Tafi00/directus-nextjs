@@ -11,18 +11,21 @@ import BottomBar from '@/components/layout/BottomBar';
 import RegisterForm from '@/components/forms/RegisterForm';
 import HeroSection from '@/components/blocks/HeroSection';
 
+
 interface StandardTemplateProps {
   sections: PageBlock[];
   headerNavigation?: any;
   footerNavigation?: any;
   globals?: any;
+  theme?: any;
 }
 
 export default function StandardTemplate({ 
   sections, 
   headerNavigation, 
   footerNavigation, 
-  globals
+  globals,
+  theme
 }: StandardTemplateProps) {
   const navRef = useRef<HTMLElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
@@ -64,20 +67,34 @@ export default function StandardTemplate({
     }
   }, [isVisualEditingEnabled, apply, router]);
 
-  // Debug logs for registerForm
-  console.log('Global object in StandardTemplate:', globals);
-  console.log('Register Form object:', globals?.register_form);
+
+  // Áp dụng theme màu từ phía server
+  const primaryColor = theme.primary;
+  const secondaryColor = theme.secondary;
+  const contentColor = theme.content;
+  const backgroundColor = theme.background;
+
+  // Style cho việc áp dụng màu sắc từ phía server
+  const themeStyle = {
+    '--primary-color': primaryColor,
+    '--secondary-color': secondaryColor,
+    '--content-color': contentColor,
+    '--background-color': backgroundColor,
+  } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen w-screen md:w-full flex flex-col bg-[#FEFBF2]">
+    <div 
+      style={themeStyle}
+      className="min-h-screen w-screen md:w-full flex flex-col bg-background"
+    >
       {/* Header với NavigationBar */}
       {headerNavigation && globals && (
         <NavigationBar ref={navRef} navigation={headerNavigation} globals={globals} />
       )}
 
-      {/* Hero Section */}
-      {globals && globals.hero && (
-        <HeroSection ref={heroRef} hero={globals.hero} />
+      {/* Hero Section - Sử dụng theme.hero thay vì globals.hero */}
+      {theme && theme.hero && (
+        <HeroSection ref={heroRef} hero={theme.hero} />
       )}
 
       {/* Nội dung chính */}
@@ -88,18 +105,18 @@ export default function StandardTemplate({
             <PageBuilder sections={sections} />
           </div>
 
-          {/* Right Column - Sticky Form */}
+          {/* Right Column - Sticky Form - Sử dụng theme.register_form thay vì globals.register_form */}
           <div className="hidden lg:block lg:sticky lg:top-[80px] h-fit">
-            {globals && globals.register_form && (
-              <RegisterForm ref={registerFormRef} registerForm={globals.register_form} />
+            {theme && theme.register_form && (
+              <RegisterForm ref={registerFormRef} theme={theme} />
             )}
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      {footerNavigation && globals && globals.footer && (
-        <Footer ref={footerRef} footer={globals.footer} />
+      {/* Footer - Sử dụng theme.footer thay vì globals.footer */}
+      {footerNavigation && theme && theme.footer && (
+        <Footer ref={footerRef} footer={theme.footer} />
       )}
 
       {/* BottomBar cho mobile */}

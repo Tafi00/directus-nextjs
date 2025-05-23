@@ -10,7 +10,7 @@ const Headline = ({ headline, className = '', as: Component = 'p', 'data-directu
 
 	return (
 		<Component
-			className={`text-[4.3vw] md:text-[28px] 2xl:text-[32px] font-bold text-[#0C5B3E] text-center leading-snug uppercase ${className}`}
+			className={`text-[4.3vw] md:text-[28px] 2xl:text-[32px] font-bold text-primary text-center leading-snug uppercase ${className}`}
 			data-directus={dataDirectus}
 		>
 			{headline}

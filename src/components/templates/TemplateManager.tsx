@@ -3,17 +3,18 @@ import StandardTemplate from './StandardTemplate';
 
 interface TemplateManagerProps {
   sections: PageBlock[];
-  template?: string | null;
   headerNavigation?: any;
   footerNavigation?: any;
   globals?: any;
+  theme?: any;
 }
 
 export default function TemplateManager({ 
   sections, 
   headerNavigation, 
   footerNavigation, 
-  globals 
+  globals,
+  theme
 }: TemplateManagerProps) {
   // Chỉ sử dụng StandardTemplate và truyền toàn bộ props cần thiết
   return (
@@ -22,6 +23,7 @@ export default function TemplateManager({
       headerNavigation={headerNavigation}
       footerNavigation={footerNavigation}
       globals={globals}
+      theme={theme}
     />
   );
 } 

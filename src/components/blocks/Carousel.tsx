@@ -53,14 +53,6 @@ const Carousel = ({ data, blockId }: CarouselProps) => {
       })
     : [];
 
-  // Log các thông số quan trọng
-  useEffect(() => {
-    console.log(`Total slides: ${sortedItems.length}`);
-    
-    return () => {
-      console.log('Carousel unmounted');
-    };
-  }, [sortedItems.length]);
 
   if (sortedItems.length === 0) {
     return null;

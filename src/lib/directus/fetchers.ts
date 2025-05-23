@@ -1,9 +1,7 @@
-import { BlockPost, PageBlock, Post, Schema } from '@/types/directus-schema';
 import { useDirectus } from './directus';
 import { readItems, aggregate, readItem, readSingleton, withToken, QueryFilter } from '@directus/sdk';
 
 /**
- * Fetches page data by permalink, including all nested blocks and dynamically fetching blog posts if required.
  */
 export const fetchPageData = async (permalink: string, postPage = 1) => {
 	const { directus, readItems } = useDirectus();
@@ -15,6 +13,12 @@ export const fetchPageData = async (permalink: string, postPage = 1) => {
 				limit: 1,
 				fields: [
 					"*",
+					"navigations.navigation_id.*",
+					"navigations.navigation_id.*.*",
+					"global.*",
+					"theme.*",
+					"theme.*.*",
+					"theme.*.*.*",
 					"blocks.*",
 					"blocks.item.*.*.*" as any,
 				  ],
@@ -29,29 +33,8 @@ export const fetchPageData = async (permalink: string, postPage = 1) => {
 		}
 
 		const page = pageData[0];
+		console.log(page);
 
-		if (Array.isArray(page.blocks)) {
-			for (const block of page.blocks as PageBlock[]) {
-				if (
-					block.collection === 'block_posts' &&
-					typeof block.item === 'object' &&
-					(block.item as BlockPost).collection === 'posts'
-				) {
-					const limit = (block.item as BlockPost).limit ?? 6;
-					const posts = await directus.request<Post[]>(
-						readItems('posts', {
-							fields: ['id', 'title', 'description', 'slug', 'image', 'status', 'published_at'],
-							filter: { status: { _eq: 'published' } },
-							sort: ['-published_at'],
-							limit,
-							page: postPage,
-						}),
-					);
-
-					(block.item as BlockPost & { posts: Post[] }).posts = posts;
-				}
-			}
-		}
 
 		return page;
 	} catch (error) {
@@ -119,107 +102,3 @@ export const fetchSiteData = async () => {
 	}
 };
 
-/**
- * Fetches a single blog post by slug and related blog posts excluding the given ID. Handles live preview mode.
- */
-
-export const fetchPostBySlug = async (
-	slug: string,
-	options?: { draft?: boolean; token?: string },
-): Promise<{ post: Post | null; relatedPosts: Post[] }> => {
-	const { directus } = useDirectus();
-	const { draft, token } = options || {};
-
-	try {
-		const filter: QueryFilter<Schema, Post> = options?.draft
-			? { slug: { _eq: slug } }
-			: { slug: { _eq: slug }, status: { _eq: 'published' } };
-		let postRequest = readItems<Schema, 'posts', any>('posts', {
-			filter,
-			limit: 1,
-			fields: [
-				'id',
-				'title',
-				'content',
-				'status',
-				'published_at',
-				'image',
-				'description',
-				'slug',
-				'seo',
-				{
-					author: ['id', 'first_name', 'last_name', 'avatar'],
-				},
-			],
-		});
-
-		// This is a really naive implementation of related posts. Just a basic check to ensure we don't return the same post. You might want to do something more sophisticated.
-		let relatedRequest = readItems<Schema, 'posts', any>('posts', {
-			filter: { slug: { _neq: slug }, status: { _eq: 'published' } },
-			limit: 2,
-			fields: ['id', 'title', 'slug', 'image'],
-		});
-
-		if (draft && token) {
-			postRequest = withToken(token, postRequest);
-			relatedRequest = withToken(token, relatedRequest);
-		}
-
-		const [posts, relatedPosts] = await Promise.all([
-			directus.request<Post[]>(postRequest),
-			directus.request<Post[]>(relatedRequest),
-		]);
-
-		const post: Post | null = posts.length > 0 ? (posts[0] as Post) : null;
-
-		return { post, relatedPosts };
-	} catch (error) {
-		console.error('Error in fetchPostBySlug:', error);
-		throw new Error('Failed to fetch blog post and related posts');
-	}
-};
-
-/**
- * Fetches paginated blog posts.
- */
-export const fetchPaginatedPosts = async (limit: number, page: number) => {
-	const { directus } = useDirectus();
-	try {
-		const response = await directus.request(
-			readItems('posts', {
-				limit,
-				page,
-				sort: ['-published_at'],
-				fields: ['id', 'title', 'description', 'slug', 'image'],
-				filter: { status: { _eq: 'published' } },
-			}),
-		);
-
-		return response;
-	} catch (error) {
-		console.error('Error fetching paginated posts:', error);
-		throw new Error('Failed to fetch paginated posts');
-	}
-};
-
-/**
- * Fetches the total number of published blog posts.
- */
-export const fetchTotalPostCount = async (): Promise<number> => {
-	const { directus } = useDirectus();
-
-	try {
-		const response = await directus.request(
-			aggregate('posts', {
-				aggregate: { count: '*' },
-				filter: { status: { _eq: 'published' } },
-			}),
-		);
-
-		return Number(response[0]?.count) || 0;
-	} catch (error) {
-		console.error('Error fetching total post count:', error);
-
-		return 0;
-	}
-};

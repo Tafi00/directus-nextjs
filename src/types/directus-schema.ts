@@ -89,17 +89,6 @@ export interface BlockHero {
 	layout?: string | null;
 }
 
-export interface BlockPost {
-	/** @required */
-	id: string;
-	/** @description Larger main headline for this page section. */
-	headline?: string | null;
-	/** @description The collection of content to fetch and display on the page within this block. @required */
-	collection: 'posts';
-	/** @description Smaller copy shown above the headline to label a section or add extra context. */
-	tagline?: string | null;
-	limit?: number | null;
-}
 
 export interface BlockPricing {
 	/** @required */
@@ -365,7 +354,7 @@ export interface PageBlock {
 	/** @description The id of the page that this block belongs to. */
 	page?: Page | string | null;
 	/** @description The data for the block. */
-	item?: BlockHero | BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockPricing | BlockInfoBox | BlockInfoGroup | BlockCarousel | string | null;
+	item?: BlockHero | BlockRichtext | BlockForm  | BlockGallery | BlockPricing | BlockInfoBox | BlockInfoGroup | BlockCarousel | string | null;
 	/** @description The collection (type of block). */
 	collection?: string | null;
 	/** @description Temporarily hide this block on the website without having to remove it from your page. */
@@ -391,6 +380,9 @@ export interface Page {
 	seo?: ExtensionSeoMetadata | null;
 	/** @description Create and arrange different content blocks (like text, images, or videos) to build your page. */
 	blocks?: PageBlock[] | string[];
+	theme?:any | null;
+	global?:any | null;
+	navigations?:any | string | null;
 }
 
 export interface Post {
@@ -400,7 +392,6 @@ export interface Post {
 	id: string;
 	/** @description Featured image for this post. Used in cards linking to the post and in the post detail page. */
 	image?: DirectusFile | string | null;
-	/** @description Unique URL for this post (e.g., `yoursite.com/posts/{{your-slug}}`) */
 	slug?: string | null;
 	sort?: number | null;
 	/** @description Is this post published? */
@@ -724,8 +715,7 @@ export interface DirectusUser {
 	theme_light?: string | null;
 	theme_light_overrides?: any | null;
 	theme_dark_overrides?: any | null;
-	/** @description Blog posts this user has authored. */
-	posts?: Post[] | string[];
+
 	policies?: DirectusAccess[] | string[];
 }
 
@@ -879,7 +869,6 @@ export interface Schema {
 	block_gallery: BlockGallery[];
 	block_gallery_items: BlockGalleryItem[];
 	block_hero: BlockHero[];
-	block_posts: BlockPost[];
 	block_pricing: BlockPricing[];
 	block_pricing_cards: BlockPricingCard[];
 	block_richtext: BlockRichtext[];
@@ -896,7 +885,6 @@ export interface Schema {
 	navigation_items: NavigationItem[];
 	page_blocks: PageBlock[];
 	pages: Page[];
-	posts: Post[];
 	directus_access: DirectusAccess[];
 	directus_activity: DirectusActivity[];
 	directus_collections: DirectusCollection[];
@@ -933,7 +921,6 @@ export enum CollectionNames {
 	block_gallery = 'block_gallery',
 	block_gallery_items = 'block_gallery_items',
 	block_hero = 'block_hero',
-	block_posts = 'block_posts',
 	block_pricing = 'block_pricing',
 	block_pricing_cards = 'block_pricing_cards',
 	block_richtext = 'block_richtext',
@@ -950,7 +937,6 @@ export enum CollectionNames {
 	navigation_items = 'navigation_items',
 	page_blocks = 'page_blocks',
 	pages = 'pages',
-	posts = 'posts',
 	directus_access = 'directus_access',
 	directus_activity = 'directus_activity',
 	directus_collections = 'directus_collections',

@@ -10,7 +10,7 @@ const Tagline = ({ tagline, className = '', as: Component = 'h2', 'data-directus
 
 	return (
 		<Component
-			className={`text-[4vw] md:text-[24px] 2xl:text-[28px] font-bold text-[#D4A437] text-center uppercase ${className}`}
+			className={`text-[4vw] md:text-[24px] 2xl:text-[28px] font-bold text-secondary text-center uppercase ${className}`}
 			data-directus={dataDirectus}
 		>
 			{tagline}

@@ -7,8 +7,8 @@ import { setAttr } from '@directus/visual-editing';
 interface HeroSectionProps {
   hero?: {
     id: string;
-    desktop_image?: string;
-    mobile_image?: string;
+    desktop_image?: any;
+    mobile_image?: any;
     alt_text?: string;
   };
 }
@@ -16,10 +16,10 @@ interface HeroSectionProps {
 const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(({ hero }, ref) => {
   const directusURL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
   const desktopImageUrl = hero?.desktop_image 
-    ? `${directusURL}/assets/${hero.desktop_image}` 
+    ? `${directusURL}/assets/${hero.desktop_image.id}` 
     : '/images/main_banner.jpg';
   const mobileImageUrl = hero?.mobile_image 
-    ? `${directusURL}/assets/${hero.mobile_image}` 
+    ? `${directusURL}/assets/${hero.mobile_image.id}` 
     : '/images/main_banner_mb.jpg';
   const altText = hero?.alt_text || 'Hero Banner';
 

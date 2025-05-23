@@ -55,7 +55,7 @@ const InfoBox = ({ data, blockId }: InfoBoxProps) => {
         
         {data.title && (
           <h4 
-            className="text-[#0C5B3E] text-[3.6vw] md:text-[0.92vw] font-semibold md:mb-3 text-justify lg:text-center"
+            className="text-primary text-[3.6vw] md:text-[0.92vw] font-semibold md:mb-3 text-justify lg:text-center"
             data-directus={setAttr({
               collection: 'block_infobox',
               item: data.id,
@@ -85,7 +85,7 @@ const InfoBox = ({ data, blockId }: InfoBoxProps) => {
 
       {data.content && (
         <p 
-          className="text-[#141414] text-[3.2vw] lg:text-[0.82vw] mt-2 md:mt-0 font-normal text-justify md:text-center leading-snug"
+          className="text-content text-[3.2vw] lg:text-[0.82vw] mt-2 md:mt-0 font-normal text-justify md:text-center leading-snug"
           data-directus={setAttr({
             collection: 'block_infobox',
             item: data.id,

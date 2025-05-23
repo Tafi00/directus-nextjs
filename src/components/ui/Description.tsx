@@ -9,7 +9,7 @@ interface DescriptionProps {
 const Description = ({ description, className = '', ...props }: DescriptionProps) => {
   return (
     <div 
-      className={`text-[3.5vw] lg:text-[16px] text-[#141414] font-medium leading-relaxed px-4 lg:px-0 text-justify ${className}`}
+      className={`text-[3.5vw] lg:text-[16px] text-content font-medium leading-relaxed px-4 lg:px-0 text-justify ${className}`}
       {...props}
     >
       {description}

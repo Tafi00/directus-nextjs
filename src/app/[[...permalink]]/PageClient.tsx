@@ -14,8 +14,9 @@ interface PageClientProps {
 	pageId?: string;
 	template?: string | null;
 	headerNavigation?: any;
-	footerNavigation?: any; 
+	footerNavigation?: any;
 	globals?: any;
+	theme?: any;
 }
 
 interface VisualEditingOptions {
@@ -23,7 +24,14 @@ interface VisualEditingOptions {
 	onSaved?: () => void;
 }
 
-export default function PageClient({ sections, pageId, template, headerNavigation, footerNavigation, globals }: PageClientProps) {
+export default function PageClient({
+	sections,
+	pageId,
+	headerNavigation,
+	footerNavigation,
+	globals,
+	theme,
+}: PageClientProps) {
 	const { isVisualEditingEnabled, apply } = useVisualEditing();
 	const router = useRouter();
 
@@ -44,20 +52,37 @@ export default function PageClient({ sections, pageId, template, headerNavigatio
 			} as VisualEditingOptions);
 		}
 	}, [isVisualEditingEnabled, apply, router]);
-	
+
 	// Render based on template using TemplateManager
 	const renderTemplate = () => {
-		return <TemplateManager 
-			sections={sections} 
-			template={template}
-			headerNavigation={headerNavigation}
-			footerNavigation={footerNavigation}
-			globals={globals}
-		/>;
-	}
+		return (
+			<TemplateManager
+				sections={sections}
+				headerNavigation={headerNavigation}
+				footerNavigation={footerNavigation}
+				globals={globals}
+				theme={theme}
+			/>
+		);
+	};
+	const primaryColor = theme?.primary || '#0C5B3E';
+	const secondaryColor = theme?.secondary || '#D4A437';
+	const contentColor = theme?.content || '#141414';
+	const backgroundColor = theme?.background || '#FEFBF2';
 
 	return (
-		<div className="relative">
+		<div
+			className="relative"
+			style={
+				{
+					'--primary-color': primaryColor,
+					'--secondary-color': secondaryColor,
+					'--content-color': contentColor,
+					'--background-color': backgroundColor,
+				} as React.CSSProperties
+			}
+			suppressHydrationWarning
+		>
 			{renderTemplate()}
 			{isVisualEditingEnabled && pageId && (
 				<div className="fixed z-50 w-full bottom-4 inset-x-0 p-4 flex justify-center items-center gap-2">
@@ -69,7 +94,7 @@ export default function PageClient({ sections, pageId, template, headerNavigatio
 						data-directus={setAttr({
 							collection: 'pages',
 							item: pageId,
-							fields: ['blocks', 'meta_m2a_button'],
+							fields: ['global', 'theme', 'blocks', 'meta_m2a_button'],
 							mode: 'modal',
 						})}
 					>
@@ -89,6 +114,7 @@ export default function PageClient({ sections, pageId, template, headerNavigatio
 					background: transparent;
 				}
 			`}</style>
+			{theme?.css && <style>{theme.css}</style>}
 		</div>
 	);
 }

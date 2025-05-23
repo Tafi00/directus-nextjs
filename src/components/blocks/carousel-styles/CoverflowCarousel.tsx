@@ -269,7 +269,7 @@ const CoverflowCarousel = ({
                           }
                         })()}
                         {!isActive && (
-                          <div className="absolute inset-0 bg-[#0C5B3E4D] mix-blend-multiply"></div>
+                          <div className="absolute inset-0 bg-primary/30 mix-blend-multiply"></div>
                         )}
                       </Link>
                     ) : (
@@ -310,14 +310,14 @@ const CoverflowCarousel = ({
                             }
                           })()}
                           {!isActive && (
-                            <div className="absolute inset-0 bg-[#0C5B3E4D] mix-blend-multiply"></div>
+                            <div className="absolute inset-0 bg-primary/30 mix-blend-multiply"></div>
                           )}
                         </div>
                       )
                     )}
                     
                     {isActive && item.title && (
-                      <div className="bg-[#0C5B3E] text-white text-[1vw] font-medium px-[2vw] py-[0.5vw] rounded-full absolute bottom-[5%] z-10 border-2 border-white shadow-md animate-fadeIn">
+                      <div className="bg-primary text-white text-[1vw] font-medium px-[2vw] py-[0.5vw] rounded-full absolute bottom-[5%] z-10 border-2 border-white shadow-md animate-fadeIn">
                         {item.title}
                       </div>
                     )}
@@ -455,7 +455,7 @@ const CoverflowCarousel = ({
                   )}
                   
                   {item.title && (
-                    <div className="bg-[#0C5B3E] text-white text-sm font-medium px-[4vw] py-[1vw] rounded-full mt-[-5vw] z-20 border-2 border-white shadow-md">
+                    <div className="bg-primary text-white text-sm font-medium px-[4vw] py-[1vw] rounded-full mt-[-5vw] z-20 border-2 border-white shadow-md">
                       {item.title}
                     </div>
                   )}
