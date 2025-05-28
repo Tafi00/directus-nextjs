@@ -7,22 +7,28 @@ import { setAttr } from '@directus/visual-editing';
 
 interface RegisterFormProps {
 	theme: any;
+	modalData?: any;
 }
 
-const RegisterForm = forwardRef<HTMLDivElement, RegisterFormProps>(({ theme }, ref) => {
+const RegisterForm = forwardRef<HTMLDivElement, RegisterFormProps>(({ theme, modalData }, ref) => {
 	const registerForm = theme.register_form;
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
-	const directusURL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+	const [selectedModalData, setSelectedModalData] = useState<any>(null);
 
-	const handleButtonClick = (type: string, url?: string | null, phone?: string | null) => {
+	const handleButtonClick = (type: string, url?: string | null, phone?: string | null, modal_id?: string | null) => {
 		switch (type) {
-			case 'modal1':
-				setIsModalOpen(true);
+			case 'modal': {
+				// Find the corresponding modal data by modal_id
+				const modal = modalData?.find((m: any) => m.modal_id === modal_id);
+				setSelectedModalData(modal);
+				if (modal?.style === 'download') {
+					setIsPdfModalOpen(true);
+				} else {
+					setIsModalOpen(true);
+				}
 				break;
-			case 'modal2':
-				setIsPdfModalOpen(true);
-				break;
+			}
 			case 'tel':
 				if (phone) {
 					const cleanPhoneNumber = phone.replace(/[^0-9]/g, '');
@@ -97,16 +103,16 @@ const RegisterForm = forwardRef<HTMLDivElement, RegisterFormProps>(({ theme }, r
 							<button
 								key={button.id}
 								className="form-button h-[44px] sm:h-[50px] lg:h-[56px] text-sm sm:text-base"
-								onClick={() => handleButtonClick(button.type, button.url, button.phone)}
+								onClick={() => handleButtonClick(button.type, button.url, button.phone, button.modal_id)}
 							>
 								{button.text}
 							</button>
 						))}
 			</div>
 
-			<RegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+			<RegisterModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} modalData={selectedModalData} />
 
-			<PdfModal isOpen={isPdfModalOpen} onClose={() => setIsPdfModalOpen(false)} />
+			<PdfModal isOpen={isPdfModalOpen} onClose={() => setIsPdfModalOpen(false)} modalData={selectedModalData} />
 		</div>
 	);
 });

@@ -1,0 +1,270 @@
+/* Custom styles for news content in NewsDialog */
+.news-content-wrapper {
+  /* Reset and base styling */
+  all: initial !important;
+  display: block !important;
+  font-family: inherit !important;
+  color: #333333 !important;
+  line-height: 1.6 !important;
+  font-size: 16px !important;
+  text-align: left !important;
+  
+  /* Direct child elements */
+  & > * {
+    margin-bottom: 1em !important;
+  }
+  
+  /* Headings */
+  & h1, & h2, & h3, & h4, & h5, & h6 {
+    font-family: inherit !important;
+    margin-top: 1.5em !important;
+    margin-bottom: 0.75em !important;
+    font-weight: 600 !important;
+    color: var(--primary-color) !important;
+    line-height: 1.3 !important;
+  }
+  
+  & h1 {
+    font-size: 2rem !important;
+    margin-top: 0 !important;
+  }
+  
+  & h2 {
+    font-size: 1.75rem !important;
+  }
+  
+  & h3 {
+    font-size: 1.5rem !important;
+  }
+  
+  & h4 {
+    font-size: 1.25rem !important;
+  }
+  
+  & h5 {
+    font-size: 1.125rem !important;
+  }
+  
+  & h6 {
+    font-size: 1rem !important;
+  }
+  
+  /* Paragraphs */
+  & p {
+    margin: 0 0 1em 0 !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Lists */
+  & ul, & ol {
+    margin: 0 0 1em 0 !important;
+    padding-left: 2em !important;
+  }
+  
+  & ul {
+    list-style-type: disc !important;
+  }
+  
+  & ol {
+    list-style-type: decimal !important;
+  }
+  
+  & li {
+    margin-bottom: 0.5em !important;
+    line-height: 1.6 !important;
+  }
+  
+  & ul ul, & ol ul {
+    list-style-type: circle !important;
+  }
+  
+  & ul ul ul, & ol ul ul {
+    list-style-type: square !important;
+  }
+  
+  /* Links */
+  & a {
+    color: var(--primary-color) !important;
+    text-decoration: underline !important;
+    transition: color 0.2s ease !important;
+  }
+  
+  & a:hover {
+    color: var(--primary-color) !important;
+    opacity: 0.8 !important;
+    text-decoration: underline !important;
+  }
+  
+  /* Images */
+  & img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 0.375rem !important;
+    margin: 1em 0 !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+  
+  /* When image is the only child in a paragraph, make it fill width */
+  & p:has(> img:only-child) img {
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  /* When image is directly in the content, not in a paragraph */
+  & > img {
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  & figure {
+    margin: 1em 0 !important;
+    display: block !important;
+  }
+  
+  & figcaption {
+    font-size: 0.875rem !important;
+    color: #666666 !important;
+    text-align: center !important;
+    margin-top: 0.5em !important;
+  }
+  
+  /* Image captions using em tag */
+  & em {
+    display: block !important;
+    text-align: center !important;
+    font-style: italic !important;
+    color: #666666 !important;
+    font-size: 0.875rem !important;
+    margin-top: 0.5em !important;
+    margin-bottom: 1.5em !important;
+  }
+  
+  /* When em is directly after an image, adjust spacing */
+  & img + em {
+    margin-top: 0.5em !important;
+    margin-bottom: 1.5em !important;
+  }
+  
+  /* When em is inside a paragraph that follows an image */
+  & img + p > em:only-child {
+    display: block !important;
+    text-align: center !important;
+  }
+  
+  /* Tables */
+  & table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 1em 0 !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+  
+  & th, & td {
+    border: 1px solid #e2e8f0 !important;
+    padding: 0.75em !important;
+    text-align: left !important;
+  }
+  
+  & th {
+    background-color: #f8fafc !important;
+    font-weight: 600 !important;
+    color: var(--primary-color) !important;
+  }
+  
+  & tr:nth-child(even) {
+    background-color: #f8fafc !important;
+  }
+  
+  /* Blockquotes */
+  & blockquote {
+    border-left: 4px solid var(--primary-color) !important;
+    padding: 0.5em 0 0.5em 1em !important;
+    margin: 1em 0 !important;
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    font-style: italic !important;
+    color: #555555 !important;
+  }
+  
+  & blockquote p {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Code blocks */
+  & pre {
+    background-color: #f1f5f9 !important;
+    border-radius: 0.375rem !important;
+    padding: 1em !important;
+    overflow-x: auto !important;
+    margin: 1em 0 !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    font-size: 0.9em !important;
+    line-height: 1.5 !important;
+    white-space: pre !important;
+  }
+  
+  & code {
+    background-color: #f1f5f9 !important;
+    border-radius: 0.25rem !important;
+    padding: 0.2em 0.4em !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    font-size: 0.9em !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Horizontal rule */
+  & hr {
+    border: 0 !important;
+    height: 1px !important;
+    background-color: #e2e8f0 !important;
+    margin: 2em 0 !important;
+  }
+  
+  /* Alignment classes that Directus might add */
+  & .align-left {
+    text-align: left !important;
+  }
+  
+  & .align-center {
+    text-align: center !important;
+  }
+  
+  & .align-right {
+    text-align: right !important;
+  }
+  
+  & .align-justify {
+    text-align: justify !important;
+  }
+  
+  /* Directus specific classes */
+  & .directus-embed {
+    position: relative !important;
+    padding-bottom: 56.25% !important; /* 16:9 aspect ratio */
+    height: 0 !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
+    margin: 1em 0 !important;
+  }
+  
+  & .directus-embed iframe {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0 !important;
+  }
+  
+  /* Ensure all divs have proper spacing */
+  & div {
+    margin-bottom: 1em !important;
+  }
+  
+  /* Fix for nested lists */
+  & li > ul, & li > ol {
+    margin-top: 0.5em !important;
+    margin-bottom: 0 !important;
+  }
+}

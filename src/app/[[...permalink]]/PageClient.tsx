@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 import { setAttr } from '@directus/visual-editing';
 import TemplateManager from '@/components/templates/TemplateManager';
+import ScriptInjector from '@/components/ScriptInjector';
 
 interface PageClientProps {
 	sections: PageBlock[];
@@ -17,6 +18,8 @@ interface PageClientProps {
 	footerNavigation?: any;
 	globals?: any;
 	theme?: any;
+	modalData?: any;
+	posts?: any[];
 }
 
 interface VisualEditingOptions {
@@ -31,6 +34,8 @@ export default function PageClient({
 	footerNavigation,
 	globals,
 	theme,
+	modalData,
+	posts,
 }: PageClientProps) {
 	const { isVisualEditingEnabled, apply } = useVisualEditing();
 	const router = useRouter();
@@ -62,6 +67,9 @@ export default function PageClient({
 				footerNavigation={footerNavigation}
 				globals={globals}
 				theme={theme}
+				modalData={modalData}
+				posts={posts}
+				pageId={pageId}
 			/>
 		);
 	};
@@ -70,39 +78,43 @@ export default function PageClient({
 	const contentColor = theme?.content || '#141414';
 	const backgroundColor = theme?.background || '#FEFBF2';
 
+	// Add the ScriptInjector component to inject code into head and body
 	return (
-		<div
-			className="relative"
-			style={
-				{
-					'--primary-color': primaryColor,
-					'--secondary-color': secondaryColor,
-					'--content-color': contentColor,
-					'--background-color': backgroundColor,
-				} as React.CSSProperties
-			}
-			suppressHydrationWarning
-		>
-			{renderTemplate()}
-			{isVisualEditingEnabled && pageId && (
-				<div className="fixed z-50 w-full bottom-4 inset-x-0 p-4 flex justify-center items-center gap-2">
-					{/* If you're not using the visual editor it's safe to remove this element. Just a helper to let editors add edit / add new blocks to a page. */}
-					<Button
-						id="visual-editing-button"
-						variant="secondary"
-						className="visual-editing-button-class"
-						data-directus={setAttr({
-							collection: 'pages',
-							item: pageId,
-							fields: ['global', 'theme', 'blocks', 'meta_m2a_button'],
-							mode: 'modal',
-						})}
-					>
-						<Pencil className="size-4 mr-2" />
-						Edit All Blocks
-					</Button>
-				</div>
-			)}
+		<>
+			<div
+				className="relative"
+				style={
+					{
+						'--primary-color': primaryColor,
+						'--secondary-color': secondaryColor,
+						'--content-color': contentColor,
+						'--background-color': backgroundColor,
+					} as React.CSSProperties
+				}
+				suppressHydrationWarning
+			>
+				{renderTemplate()}
+
+				{isVisualEditingEnabled && pageId && (
+					<div className="fixed z-50 w-full bottom-4 inset-x-0 p-4 flex justify-center items-center gap-2">
+						{/* If you're not using the visual editor it's safe to remove this element. Just a helper to let editors add edit / add new blocks to a page. */}
+						<Button
+							id="visual-editing-button"
+							variant="secondary"
+							className="visual-editing-button-class"
+							data-directus={setAttr({
+								collection: 'pages',
+								item: pageId,
+								fields: ['global', 'theme', 'modals', 'blocks', 'meta_m2a_button'],
+								mode: 'modal',
+							})}
+						>
+							<Pencil className="size-4 mr-2" />
+							Edit All Blocks
+						</Button>
+					</div>
+				)}
+			</div>
 			<style jsx global>{`
 				/* Safe to remove this if you're not using the visual editor. */
 				.directus-visual-editing-overlay.visual-editing-button-class .directus-visual-editing-edit-button {
@@ -114,7 +126,7 @@ export default function PageClient({
 					background: transparent;
 				}
 			`}</style>
-			{theme?.css && <style>{theme.css}</style>}
-		</div>
+			{theme?.css && <style>{theme?.css}</style>}
+		</>
 	);
 }

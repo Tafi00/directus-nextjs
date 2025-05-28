@@ -4,9 +4,11 @@ import Container from '@/components/ui/container';
 
 interface PageBuilderProps {
 	sections: PageBlock[];
+	posts?: any[];
+	pageId?: string;
 }
 
-const PageBuilder = ({ sections }: PageBuilderProps) => {
+const PageBuilder = ({ sections, posts, pageId }: PageBuilderProps) => {
 	const validBlocks = sections.filter(
 		(block): block is PageBlock & { collection: string; item: object } =>
 			typeof block.collection === 'string' && !!block.item && typeof block.item === 'object',
@@ -22,6 +24,8 @@ const PageBuilder = ({ sections }: PageBuilderProps) => {
 								item: block.item,
 								id: block.id,
 							}}
+							posts={posts}
+							pageId={pageId}
 						/>
 					</Container>
 				</section>

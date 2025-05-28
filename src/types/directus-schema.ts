@@ -937,6 +937,7 @@ export enum CollectionNames {
 	navigation_items = 'navigation_items',
 	page_blocks = 'page_blocks',
 	pages = 'pages',
+	modals = 'modals',
 	directus_access = 'directus_access',
 	directus_activity = 'directus_activity',
 	directus_collections = 'directus_collections',

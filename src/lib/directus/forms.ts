@@ -1,59 +1,28 @@
-import { useDirectus } from './directus';
+import { createFormSubmission } from './fetchers';
 
-interface SubmissionValue {
-	field: string;
-	value?: string;
-	file?: string;
-}
-
-export const submitForm = async (
-	formId: string,
-	fields: { id: string; name: string; type: string }[],
-	data: Record<string, any>,
-) => {
-	const { directus, uploadFiles, createItem, withToken } = useDirectus();
-	const TOKEN = process.env.DIRECTUS_FORM_TOKEN;
-
-	if (!TOKEN) {
-		throw new Error('DIRECTUS_FORM_TOKEN is not defined. Check your .env file.');
-	}
-
-	try {
-		const submissionValues: SubmissionValue[] = [];
-
-		for (const field of fields) {
-			const value = data[field.name];
-
-			if (value === undefined || value === null) continue;
-
-			if (field.type === 'file' && value instanceof File) {
-				const formData = new FormData();
-				formData.append('file', value);
-
-				const uploadedFile = await directus.request(withToken(TOKEN, uploadFiles(formData)));
-
-				if (uploadedFile && 'id' in uploadedFile) {
-					submissionValues.push({
-						field: field.id,
-						file: uploadedFile.id,
-					});
-				}
-			} else {
-				submissionValues.push({
-					field: field.id,
-					value: value.toString(),
-				});
-			}
-		}
-
-		const payload = {
-			form: formId,
-			values: submissionValues,
-		};
-
-		await directus.request(withToken(TOKEN, createItem('form_submissions', payload)));
-	} catch (error) {
-		console.error('Error submitting form:', error);
-		throw new Error('Failed to submit form');
-	}
+/**
+ * Submits form data to the pages collection in Directus
+ * This creates a new entry in the pages.form field (many-to-many relationship)
+ */
+export const submitForm = async (data: {
+  name: string;
+  phone: string;
+  form_id: string; // We'll keep this parameter name for backward compatibility
+  useragent: string;
+  permalink: string;
+}) => {
+  try {
+    const result = await createFormSubmission({
+      name: data.name,
+      phone: data.phone,
+      form_id: data.form_id, // This will be stored as form_type in the database
+      useragent: data.useragent,
+      permalink: data.permalink
+    });
+    
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error submitting form to pages collection:', error);
+    return { success: false, error };
+  }
 };

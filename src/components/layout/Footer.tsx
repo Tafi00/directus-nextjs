@@ -4,6 +4,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import Link from 'next/link';
 import Container from '@/components/ui/container';
 import { setAttr } from '@directus/visual-editing';
+import { createFormSubmission } from '@/lib/directus/fetchers';
 // Import SuccessDialog khi bạn đã tạo xong component
 // import SuccessDialog from '@/components/modals/SuccessDialog';
 
@@ -39,6 +40,8 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 	const [showSuccess, setShowSuccess] = useState(false);
 	const [formError, setFormError] = useState("");
 	const [isMobile, setIsMobile] = useState(false);
+	const [userAgent, setUserAgent] = useState('');
+	const [currentPermalink, setCurrentPermalink] = useState('');
 	const directusURL = process.env.NEXT_PUBLIC_DIRECTUS_URL;
 
 	// Kiểm tra kích thước màn hình để xác định mobile hay desktop
@@ -52,6 +55,17 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 		
 		// Thêm event listener
 		window.addEventListener('resize', checkMobile);
+		
+		// Get user agent
+		setUserAgent(typeof window !== 'undefined' ? window.navigator.userAgent : '');
+		
+		// Get current page permalink from URL
+		if (typeof window !== 'undefined') {
+			// Extract permalink from URL path (remove leading slash)
+			const path = window.location.pathname;
+			const permalink = path === '/' ? 'home' : path.replace(/^\//, '');
+			setCurrentPermalink(permalink);
+		}
 		
 		// Cleanup
 		return () => window.removeEventListener('resize', checkMobile);
@@ -72,7 +86,6 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 		// Kiểm tra tên và số điện thoại không rỗng
 		if (!formData.fullName || !formData.phoneNumber) {
 			setFormError("Vui lòng nhập đầy đủ họ tên và số điện thoại");
-			
 			return;
 		}
 
@@ -80,8 +93,19 @@ const Footer = forwardRef<HTMLDivElement, FooterProps>(({ footer }, ref) => {
 			setIsLoading(true);
 			setFormError("");
 
-			// Gửi form đến API của bạn ở đây
-			// Thay thế phần gửi form của bạn tại đây
+			// Create form data entry in the pages collection's form field (many-to-many relationship)
+			try {
+				await createFormSubmission({
+					name: formData.fullName,
+					phone: formData.phoneNumber,
+					form_id: 'FooterForm',
+					useragent: userAgent,
+					permalink: currentPermalink
+				});
+				console.log('Footer form data created in pages collection');
+			} catch (directusError) {
+				console.error('Error creating form data in pages collection:', directusError);
+			}
 
 			setShowSuccess(true);
 			setFormData({

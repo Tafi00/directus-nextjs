@@ -46,6 +46,27 @@
 
 }
 
+/* Animations cho SuccessDialog */
+@keyframes scale-up {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-up {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes check-mark {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.custom-check-mark {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
 @layer utilities {
 	a,div,p,span,h1,h2,h3,h4,h5,h6 {
 		@apply  whitespace-pre-wrap;
