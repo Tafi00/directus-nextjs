@@ -12,7 +12,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import { ReactNode } from 'react';
 
-export default function RootLayout({ children, permalink }: { children: ReactNode; permalink?: string }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
 		<html lang="en" className={`${montserrat.variable} font-montserrat antialiased flex flex-col min-h-screen`}>
 			<body className={`${montserrat.variable} font-montserrat antialiased flex flex-col min-h-screen`}>
